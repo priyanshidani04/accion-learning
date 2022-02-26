@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body onload="FetchData()">
+
+    <button id="prevbtn"> Prev </button>
+    <button id="nextbtn"> Next </button> <br><br>
+    <p><span id="txtResult"></span></p>
+    <span id="spTable"></span>
+    <script>
+       // var prevbtn = document.getElementById("prevbtn");
+        var currentPageIndex = 0;
+        var recordSize = 5;
+
+        function FetchData() {
+            fetch('https://5c230da35db0f6001345fea3.mockapi.io/api/v1/menu')
+                .then(response => response.json())
+                .then(data => {
+                    createTable(data);
+                });
+        }
+
+        function createTable(data) {
+            var tableStr = '<table><tr><th>ID</th><th>Name</th></tr>';
+            for (var i = currentPageIndex * recordSize; i < data.length && i < currentPageIndex * recordSize + recordSize; i++) {
+                tableStr += '<tr><td>' + data[i].id + '</td><td> ' + data[i].name + ' </td></tr>'
+            }
+            tableStr += '</table>'
+            document.getElementById("spTable").innerHTML = tableStr;
+        }
+        function myFunction() {
+            var input, filter, a, i, txtValue;
+            
+            filter = input.value.toUpperCase();
+            
+            
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    FetchData();
+                } else {
+                    console.log("null");
+                }
+            
+        }
+
+
+        prevbtn.addEventListener("click", function () {
+
+            if (currentPageIndex > 0) {
+                currentPageIndex -= 1;
+            }
+            else {
+                currentPageIndex = 0;
+            }
+            console.log(currentPageIndex);
+            FetchData();
+        });
+
+        nextbtn.addEventListener("click", function () {
+            currentPageIndex += 1;
+            FetchData();
+        });
+
+
+    </script>
+</body>
+
+</html>
